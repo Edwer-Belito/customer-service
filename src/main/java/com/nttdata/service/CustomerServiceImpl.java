@@ -1,10 +1,5 @@
 package com.nttdata.service;
 
-
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,19 +34,11 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Mono<Customer> updateSaldo(String idCustomerOld, Mono<Product> product) {
 
-		
-		 return customerRepository.findById(idCustomerOld)
-	                .flatMap(customer1 -> {
-	                	//customer1.idCustomer = idCustomerOld;
-	                	
-	                	
-	                	customer1.product.saldo = 
-	                			customer1.product.saldo.add(product.block().saldo);
+		return customerRepository.findById(idCustomerOld).flatMap(customer1 -> {
+			customer1.product.saldo = customer1.product.saldo.add(product.block().saldo);
 
+			return createCustomer(customer1);
+		}).switchIfEmpty(Mono.empty());
 
-	                    return createCustomer(customer1);
-	                })
-	                .switchIfEmpty(Mono.empty());
-			
 	}
 }

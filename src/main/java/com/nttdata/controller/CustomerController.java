@@ -1,6 +1,5 @@
 package com.nttdata.controller;
 
-import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,6 +49,9 @@ public class CustomerController {
         return new ResponseEntity<Mono<Customer>>(employeeMono,employeeMono != null? HttpStatus.OK:HttpStatus.NOT_FOUND);
     }
     
+    /*
+     * Endpoint para actualizar saldo del cliente
+     */
     @PutMapping("/updateSaldo/{idCustomer}")
     @ResponseStatus(HttpStatus.OK)
     public Mono<ResponseEntity<Customer>> updateSaldo (@RequestBody Mono<Product>product,@PathVariable("idCustomer") String idCustomer){
