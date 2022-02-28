@@ -1,9 +1,12 @@
+
 server:
   port: 8081
 
 spring:
-  data:
-    mongodb:
-      database: customerDB
-      host: localhost
-      port: 27017
+  application:
+    name: customer-service
+  config:
+    import: optional:configserver:http://localhost:9010
+  cloud:
+    config:
+      profile: dev
