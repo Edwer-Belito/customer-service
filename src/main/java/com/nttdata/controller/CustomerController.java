@@ -22,10 +22,15 @@ import com.nttdata.service.CustomerService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController()
 @RequestMapping("/customer")
 public class CustomerController {
 
+	private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
+	
 	@Autowired
 	private CustomerService customerService;
 	
@@ -44,9 +49,12 @@ public class CustomerController {
 
     @GetMapping("/get/{id}")
     @ResponseBody
-    public ResponseEntity<Mono<Customer>> findById(@PathVariable("id") String id){
-       Mono<Customer> employeeMono= customerService.findByCustomerId(id);
-        return new ResponseEntity<Mono<Customer>>(employeeMono,employeeMono != null? HttpStatus.OK:HttpStatus.NOT_FOUND);
+    public Mono<ResponseEntity<Customer>> findById(@PathVariable("id") String id){
+
+    	logger.info("CustomerController - findById - IDCUSTOMER:" + id);
+       return customerService.findByCustomerId(id)
+    		   .flatMap(customer -> Mono.just(ResponseEntity.ok(customer)))
+    		   .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
     
     /*
@@ -55,7 +63,9 @@ public class CustomerController {
     @PutMapping("/updateSaldo/{idCustomer}")
     @ResponseStatus(HttpStatus.OK)
     public Mono<ResponseEntity<Customer>> updateSaldo (@RequestBody Mono<Product>product,@PathVariable("idCustomer") String idCustomer){
-		return customerService.updateSaldo(idCustomer,product)
+		
+    	logger.info("CustomerController - updateSaldo - IDCUSTOMER: " +idCustomer+"; PRPDUCTO: " +product);
+    	return customerService.updateSaldo(idCustomer,product)
 				.flatMap(customer -> Mono.just(ResponseEntity.ok(customer)))
 				.switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
 	
