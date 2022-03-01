@@ -1,5 +1,6 @@
 package com.nttdata.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -21,6 +22,7 @@ public class Customer {
 	public String idCustomer = UUID.randomUUID().toString().substring(0, 10);
 	public String name;
 	public String customerType;
-	public Product product;
+	public List<Product> product;
+	
 	
 }

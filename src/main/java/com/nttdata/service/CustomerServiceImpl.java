@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 public class CustomerServiceImpl implements CustomerService {
 
 	private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
-	
+
 	@Autowired
 	private CustomerRepository customerRepository;
 
@@ -37,16 +37,20 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Mono<Customer> updateSaldo(String idCustomerOld, Mono<Product> product) {
+	public Mono<Customer> updateSaldo(String customerId, Mono<Product> productChange) {
 
 		logger.info("CustomerServiceImpl - updateSaldo -INICIO");
-		return customerRepository.findById(idCustomerOld)
-				.flatMap(customer1 -> {
-					
-					customer1.product.saldo = customer1.product.saldo.add(product.block().saldo);
 
-			return createCustomer(customer1);
+		return customerRepository.findById(customerId).flatMap(customerBD -> {
+
+			Product pro = productChange.block();
+			customerBD.product.stream().filter(p -> p.code.equals(pro.code)).findAny().map(pp -> {
+				pp.saldo = pp.saldo.add(pro.saldo);
+				return pp;
+			});
+
+			return createCustomer(customerBD);
 		}).switchIfEmpty(Mono.empty());
-		
+
 	}
 }
