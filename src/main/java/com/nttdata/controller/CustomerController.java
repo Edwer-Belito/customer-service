@@ -64,7 +64,7 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.OK)
     public Mono<ResponseEntity<Customer>> updateSaldo (@RequestBody Mono<Product>product,@PathVariable("idCustomer") String idCustomer){
 		
-    	logger.info("CustomerController - updateSaldo - IDCUSTOMER: " +idCustomer+"; PRPDUCTO: " +product);
+    	logger.info("CustomerController - updateSaldo - IDCUSTOMER: " +idCustomer+"; PRODUCT: " +product);
     	return customerService.updateSaldo(idCustomer,product)
 				.flatMap(customer -> Mono.just(ResponseEntity.ok(customer)))
 				.switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));

@@ -44,8 +44,8 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepository.findById(customerId).flatMap(customerBD -> {
 
 			Product pro = productChange.block();
-			customerBD.product.stream().filter(p -> p.code.equals(pro.code)).findAny().map(pp -> {
-				pp.saldo = pp.saldo.add(pro.saldo);
+			customerBD.getProducts().stream().filter(p -> p.getCode().equals(pro.getCode())).findAny().map(pp -> {
+				pp.setSaldo(pp.getSaldo().add(pro.getSaldo()));
 				return pp;
 			});
 

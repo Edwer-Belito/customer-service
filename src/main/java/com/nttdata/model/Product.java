@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Product {
 
-	public String code;
-	public String name;
-	public String type;
-	public BigDecimal saldo;
+	private String code;
+	private String name;
+	private String type;
+	private BigDecimal saldo;
 	
 }
