@@ -1,6 +1,5 @@
 package com.nttdata.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +21,8 @@ import com.nttdata.service.CustomerService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,45 +31,47 @@ import org.slf4j.LoggerFactory;
 public class CustomerController {
 
 	private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
-	
+
 	@Autowired
 	private CustomerService customerService;
-	
+
 	@PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Customer> createEmp (@RequestBody Customer customer){
-		return customerService.createCustomer(customer);
-    }
+	@ResponseStatus(HttpStatus.CREATED)
+	public Mono<Customer> createEmp(@RequestBody Customer customerPojo) {
+		return customerService.createCustomer(customerPojo);
+	}
 
-    @GetMapping(value = "/getAll",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @ResponseBody
-    public Flux<Customer> findAll(){
-        return customerService.findAllCustomer();
-    }
+	@GetMapping(value = "/getAll", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@ResponseBody
+	public Flux<Customer> findAll() {
+		return customerService.findAllCustomer();
+	}
 
+	@GetMapping("/get/{id}")
+	@ResponseBody
+	public Mono<ResponseEntity<Customer>> findById(@PathVariable("id") String id) throws InterruptedException {
 
-    @GetMapping("/get/{id}")
-    @ResponseBody
-    public Mono<ResponseEntity<Customer>> findById(@PathVariable("id") String id){
+		logger.info("CustomerController - findById - IDCUSTOMER: {}", id);
+		// add timeout for resilience4j
+		TimeUnit.SECONDS.sleep(3);
 
-    	logger.info("CustomerController - findById - IDCUSTOMER:" + id);
-       return customerService.findByCustomerId(id)
-    		   .flatMap(customer -> Mono.just(ResponseEntity.ok(customer)))
-    		   .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
-    }
-    
-    /*
-     * Endpoint para actualizar saldo del cliente
-     */
-    @PutMapping("/updateSaldo/{idCustomer}")
-    @ResponseStatus(HttpStatus.OK)
-    public Mono<ResponseEntity<Customer>> updateSaldo (@RequestBody Mono<Product>product,@PathVariable("idCustomer") String idCustomer){
-		
-    	logger.info("CustomerController - updateSaldo - IDCUSTOMER: " +idCustomer+"; PRODUCT: " +product);
-    	return customerService.updateSaldo(idCustomer,product)
+		return customerService.findByCustomerId(id).flatMap(customer -> Mono.just(ResponseEntity.ok(customer)))
+				.switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+	}
+
+	/*
+	 * Endpoint para actualizar saldo del cliente
+	 */
+	@PutMapping("/updateSaldo/{idCustomer}")
+	@ResponseStatus(HttpStatus.OK)
+	public Mono<ResponseEntity<Customer>> updateSaldo(@RequestBody Mono<Product> product,
+			@PathVariable("idCustomer") String idCustomer) {
+
+		logger.info("CustomerController - updateSaldo - IDCUSTOMER: {} , PRODUCT: {}", idCustomer , product);
+		return customerService.updateSaldo(idCustomer, product)
 				.flatMap(customer -> Mono.just(ResponseEntity.ok(customer)))
 				.switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
-	
-    }
-    
+
+	}
+
 }

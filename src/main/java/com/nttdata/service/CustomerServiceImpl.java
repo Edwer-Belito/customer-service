@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nttdata.controller.CustomerController;
 import com.nttdata.model.Customer;
 import com.nttdata.model.Product;
 import com.nttdata.repository.CustomerRepository;
@@ -16,7 +15,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-	private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
+	private static Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
 	@Autowired
 	private CustomerRepository customerRepository;
