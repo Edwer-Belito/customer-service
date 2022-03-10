@@ -1,50 +1,52 @@
-#spring:
-#  application:
-#    name: transaction-service
-#  config:
-#    import: optional:configserver:http://config-server-service:9010
-#  cloud:
-#    config:
-#      profile: dev
-
-server:
-  port: 8081
-
 spring:
-  cloud:
-    config:
-      enabled: false
-  data:
-    mongodb:
-      database: customerDB
-      host: mongoDB
-      port: 27017
   application:
     name: customer-service
+  config:
+    import: optional:configserver:http://config-server-service:9010
+  cloud:
+    config:
+      profile: dev
+    
 
-#Actuator
-management:
-  endpoints:
-    enabled-by-default: false
-    web:
-      exposure:
-        include: health, info, refresh, restart, env
-  endpoint:
-    health:
-      enabled: true
-    info:
-      enabled: true
-    refresh:
-      enabled: true
-    restart:
-      enabled: true
-    env:
-      enabled: true
+
+#server:
+#  port: 8081
+#
+#spring:
+#  cloud:
+#    config:
+#      enabled: false
+#  data:
+#    mongodb:
+#      database: customerDB
+#      host: mongoDB
+#      port: 27017
+#  application:
+#    name: customer-service
+#
+##Actuator
+#management:
+#  endpoints:
+#    enabled-by-default: false
+#    web:
+#      exposure:
+#        include: health, info, refresh, restart, env
+#  endpoint:
+#    health:
+#      enabled: true
+#    info:
+#      enabled: true
+#    refresh:
+#      enabled: true
+#    restart:
+#      enabled: true
+#    env:
+#      enabled: true
   
 
 
     
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka-server-service:8761/eureka
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://eureka-server-service:8761/eureka
