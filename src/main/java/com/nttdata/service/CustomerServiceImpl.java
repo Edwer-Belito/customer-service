@@ -89,22 +89,20 @@ return customerRepository.findAll();
  * @param Customer
  * @return Mono<Customer>
  */
-public final Mono<Customer> updateSaldo(final String customerId, final
-Mono<Product> productChange) {
+public final Mono<Customer> updateSaldo(final String customerId, final Mono<Product> productChange) {
 
-logger.info("CustomerServiceImpl - updateSaldo -INICIO");
+	logger.info("CustomerServiceImpl - updateSaldo -INICIO");
 
-return customerRepository.findById(customerId).flatMap(customerBD -> {
+	return customerRepository.findById(customerId).flatMap(customerBD -> {
 
-Product pro = productChange.block();
-customerBD.getProducts().stream().filter(p -> p.getCode()
-.equals(pro.getCode())).findAny().map(pp -> {
-pp.setSaldo(pp.getSaldo().add(pro.getSaldo()));
-return pp;
-});
+		Product pro = productChange.block();
+		customerBD.getProducts().stream().filter(p -> p.getCode().equals(pro.getCode())).findFirst().map(pp -> {
+			pp.setSaldo(pp.getSaldo().add(pro.getSaldo()));
+			return pp;
+		});
 
-return createCustomer(customerBD);
-}).switchIfEmpty(Mono.empty());
+		return createCustomer(customerBD);
+	}).switchIfEmpty(Mono.empty());
 
 }
 }

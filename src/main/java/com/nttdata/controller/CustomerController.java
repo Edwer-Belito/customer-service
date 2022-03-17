@@ -107,7 +107,7 @@ String id) throws InterruptedException {
 
 logger.info("CustomerController - findById - IDCUSTOMER: {}", id);
 // add timeout for resilience4j
-TimeUnit.SECONDS.sleep(3);
+TimeUnit.SECONDS.sleep(2);
 
 return customerService.findByCustomerId(id).flatMap(customer -> Mono.just(
 ResponseEntity.ok(customer))).switchIfEmpty(Mono.just(ResponseEntity.
