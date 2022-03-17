@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import com.nttdata.azure.model.Book;
 import com.nttdata.model.Customer;
 import com.nttdata.model.Product;
 import com.nttdata.service.CustomerService;
